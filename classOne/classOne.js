@@ -6,7 +6,7 @@ const plays = {
 module.exports = function statement(invoice, plays) {
   const statementData = {};
   statementData.customer = invoice.customer;
-  statementData.performances = invoice.performances
+  statementData.performances = invoice.performances.map(enrichPerformance);
   return renderPlanText(statementData, plays)
 }
 function renderPlanText(data, plays) {
@@ -18,6 +18,11 @@ function renderPlanText(data, plays) {
   result += `Amount owed is ${format(totalAmount(data) / 100)}\n`;
   result += `You earned ${ totalVolumeCredits(data)} credits \n`;
   return result;
+}
+function enrichPerformance(aPerformance) {
+  const result = Object.assign({}, aPerformance);
+  return result;
+
 }
 function playFor(aper) {
   return plays[aper.playID]
