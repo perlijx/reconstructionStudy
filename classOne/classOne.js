@@ -13,7 +13,7 @@ function renderPlanText(data, plays) {
   let result = `Statement for ${data.customer}\n`;
   for (let perf of data.performances) {
     // 打印行此订单
-    result += ` ${perf.play.name}: ${format(amountFor(perf) / 100)} (${perf.audience} seats)\n`;
+    result += ` ${perf.play.name}: ${format(perf.amount / 100)} (${perf.audience} seats)\n`;
   } 
   result += `Amount owed is ${format(totalAmount(data) / 100)}\n`;
   result += `You earned ${ totalVolumeCredits(data)} credits \n`;
@@ -22,6 +22,7 @@ function renderPlanText(data, plays) {
 function enrichPerformance(aPerformance) {
   const result = Object.assign({}, aPerformance);
   result.play = playFor(result);
+  result.amount = amountFor(result);
   return result;
 
 }
@@ -32,7 +33,7 @@ function totalAmount(invoice) {
    let result = 0;
   for (let perf of invoice.performances) {
     // 打印行此订单
-    result += amountFor(perf);
+    result += perf.amount;
   } 
   return result
 }
