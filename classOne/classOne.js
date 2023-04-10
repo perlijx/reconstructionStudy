@@ -6,6 +6,7 @@ const plays = {
 module.exports = function statement(invoice, plays) {
   const statementData = {};
   statementData.customer = invoice.customer;
+  statementData.performances = invoice.performances
   return renderPlanText(statementData,invoice, plays)
 }
 function renderPlanText(data,invoice, plays) {
