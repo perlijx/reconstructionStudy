@@ -7,16 +7,16 @@ module.exports = function statement(invoice, plays) {
   const statementData = {};
   statementData.customer = invoice.customer;
   statementData.performances = invoice.performances
-  return renderPlanText(statementData,invoice, plays)
+  return renderPlanText(statementData, plays)
 }
-function renderPlanText(data,invoice, plays) {
-  let result = `Statement for ${invoice.customer}\n`;
-  for (let perf of invoice.performances) {
+function renderPlanText(data, plays) {
+  let result = `Statement for ${data.customer}\n`;
+  for (let perf of data.performances) {
     // 打印行此订单
     result += ` ${playFor(perf).name}: ${format(amountFor(perf) / 100)} (${perf.audience} seats)\n`;
   } 
-  result += `Amount owed is ${format(totalAmount(invoice) / 100)}\n`;
-  result += `You earned ${ totalVolumeCredits(invoice)} credits \n`;
+  result += `Amount owed is ${format(totalAmount(data) / 100)}\n`;
+  result += `You earned ${ totalVolumeCredits(data)} credits \n`;
   return result;
 }
 function playFor(aper) {
