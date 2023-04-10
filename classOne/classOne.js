@@ -5,20 +5,15 @@ module.exports = function statement(invoice, plays) {
   const format = new Intl.NumberFormat("en-US", {
     style: "currency", currency: "USD", minimumFractionDigits: 2
   }).format;
-
   for (let perf of invoice.performances) {
-    const play = plays[perf.playID];
-   
-
-    let thisAmount =  amountFor(perf, play)
-
+    let thisAmount =  amountFor(perf, playFor(perf, plays))
     // 添加数量积分
     volumeCredits += Math.max(perf.audience - 30, 0);
     // 每十名喜剧参与者增加额外积分分
-    if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
+    if ("comedy" === playFor(perf, plays).type) volumeCredits += Math.floor(perf.audience / 5);
 
     // 打印行此订单
-    result += ` ${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
+    result += ` ${playFor(perf).name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
     totalAmount += thisAmount;
   }
 
@@ -26,10 +21,18 @@ module.exports = function statement(invoice, plays) {
   result += `You earned ${volumeCredits} credits \n`;
   return result;
 }
+const plays = {
+  "hamlet": { "name": "Hamlet", "type": "tragedy" },
+  "as-like": { "name": "As You Like It", "type": "comedy" },
+  "othello": { "name": "Othello", "type": "tragedy" }
+}
+function playFor(aper) {
+  return plays[aper.playID]
+}
 
 function amountFor(perf,play) {
   let result = 0;
-  switch (play.type) {
+  switch (playFor(perf).type) {
     case "tragedy":
       result = 40000;
       if (perf.audience > 30) {
@@ -44,7 +47,7 @@ function amountFor(perf,play) {
       result += 300 * perf.audience;
       break;
     default:
-      throw new Error(`unknown type: ${play.type}`);
+      throw new Error(`unknown type: ${playFor(perf).type}`);
   }
   return result
 }
