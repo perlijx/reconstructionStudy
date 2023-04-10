@@ -1,4 +1,13 @@
+const plays = {
+  "hamlet": { "name": "Hamlet", "type": "tragedy" },
+  "as-like": { "name": "As You Like It", "type": "comedy" },
+  "othello": { "name": "Othello", "type": "tragedy" }
+}
 module.exports = function statement(invoice, plays) {
+  const statementData = {};
+  return renderPlanText(statementData,invoice, plays)
+}
+function renderPlanText(data,invoice, plays) {
   let result = `Statement for ${invoice.customer}\n`;
   for (let perf of invoice.performances) {
     // 打印行此订单
@@ -7,11 +16,6 @@ module.exports = function statement(invoice, plays) {
   result += `Amount owed is ${format(totalAmount(invoice) / 100)}\n`;
   result += `You earned ${ totalVolumeCredits(invoice)} credits \n`;
   return result;
-}
-const plays = {
-  "hamlet": { "name": "Hamlet", "type": "tragedy" },
-  "as-like": { "name": "As You Like It", "type": "comedy" },
-  "othello": { "name": "Othello", "type": "tragedy" }
 }
 function playFor(aper) {
   return plays[aper.playID]
