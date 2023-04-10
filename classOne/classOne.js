@@ -1,17 +1,13 @@
 module.exports = function statement(invoice, plays) {
   let totalAmount = 0;
-  let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
   for (let perf of invoice.performances) {
-    // 添加数量积分
-    volumeCredits += volumeCreditsFor(perf);
     // 打印行此订单
     result += ` ${playFor(perf).name}: ${format(amountFor(perf) / 100)} (${perf.audience} seats)\n`;
     totalAmount += amountFor(perf);
   }
-
   result += `Amount owed is ${format(totalAmount / 100)}\n`;
-  result += `You earned ${volumeCredits} credits \n`;
+  result += `You earned ${ totalVolumeCredits(invoice)} credits \n`;
   return result;
 }
 const plays = {
@@ -23,6 +19,14 @@ function playFor(aper) {
   return plays[aper.playID]
 }
 
+function totalVolumeCredits(invoice) {
+  let volumeCredits = 0;
+  for (let perf of invoice.performances) {
+    // 添加数量积分
+    volumeCredits += volumeCreditsFor(perf);
+  }
+  return volumeCredits
+}
 function amountFor(perf) {
   let result = 0;
   switch (playFor(perf).type) {
