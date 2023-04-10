@@ -6,15 +6,14 @@ module.exports = function statement(invoice, plays) {
     style: "currency", currency: "USD", minimumFractionDigits: 2
   }).format;
   for (let perf of invoice.performances) {
-    let thisAmount =  amountFor(perf, playFor(perf, plays))
     // 添加数量积分
     volumeCredits += Math.max(perf.audience - 30, 0);
     // 每十名喜剧参与者增加额外积分分
     if ("comedy" === playFor(perf, plays).type) volumeCredits += Math.floor(perf.audience / 5);
 
     // 打印行此订单
-    result += ` ${playFor(perf).name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
-    totalAmount += thisAmount;
+    result += ` ${playFor(perf).name}: ${format(amountFor(perf) / 100)} (${perf.audience} seats)\n`;
+    totalAmount += amountFor(perf);
   }
 
   result += `Amount owed is ${format(totalAmount / 100)}\n`;
