@@ -7,10 +7,7 @@ module.exports = function statement(invoice, plays) {
   }).format;
   for (let perf of invoice.performances) {
     // 添加数量积分
-    volumeCredits += Math.max(perf.audience - 30, 0);
-    // 每十名喜剧参与者增加额外积分分
-    if ("comedy" === playFor(perf, plays).type) volumeCredits += Math.floor(perf.audience / 5);
-
+    volumeCredits += volumeCreditsFor(perf);
     // 打印行此订单
     result += ` ${playFor(perf).name}: ${format(amountFor(perf) / 100)} (${perf.audience} seats)\n`;
     totalAmount += amountFor(perf);
@@ -29,7 +26,7 @@ function playFor(aper) {
   return plays[aper.playID]
 }
 
-function amountFor(perf,play) {
+function amountFor(perf) {
   let result = 0;
   switch (playFor(perf).type) {
     case "tragedy":
@@ -49,4 +46,14 @@ function amountFor(perf,play) {
       throw new Error(`unknown type: ${playFor(perf).type}`);
   }
   return result
+}
+
+
+function volumeCreditsFor(aPerformance) {
+  let result = 0;
+  result += Math.max(aPerformance.audience - 30, 0);
+   // 每十名喜剧参与者增加额外积分分
+  if ("comedy" === playFor(aPerformance).type)
+    result += Math.floor(aPerformance.audience / 5);
+  return result;
 }
