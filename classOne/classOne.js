@@ -23,6 +23,7 @@ function enrichPerformance(aPerformance) {
   const result = Object.assign({}, aPerformance);
   result.play = playFor(result);
   result.amount = amountFor(result);
+  result.volumeCredits = volumeCreditsFor(result);
   return result;
 
 }
@@ -41,7 +42,7 @@ function totalVolumeCredits(invoice) {
   let result = 0;
   for (let perf of invoice.performances) {
     // 添加数量积分
-    result += volumeCreditsFor(perf);
+    result += perf.volumeCredits;
   }
   return result
 }
