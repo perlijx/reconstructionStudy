@@ -13,7 +13,7 @@ function renderPlanText(data, plays) {
   let result = `Statement for ${data.customer}\n`;
   for (let perf of data.performances) {
     // 打印行此订单
-    result += ` ${playFor(perf).name}: ${format(amountFor(perf) / 100)} (${perf.audience} seats)\n`;
+    result += ` ${perf.play.name}: ${format(amountFor(perf) / 100)} (${perf.audience} seats)\n`;
   } 
   result += `Amount owed is ${format(totalAmount(data) / 100)}\n`;
   result += `You earned ${ totalVolumeCredits(data)} credits \n`;
@@ -21,6 +21,7 @@ function renderPlanText(data, plays) {
 }
 function enrichPerformance(aPerformance) {
   const result = Object.assign({}, aPerformance);
+  result.play = playFor(result);
   return result;
 
 }
@@ -45,7 +46,7 @@ function totalVolumeCredits(invoice) {
 }
 function amountFor(perf) {
   let result = 0;
-  switch (playFor(perf).type) {
+  switch (perf.play.type) {
     case "tragedy":
       result = 40000;
       if (perf.audience > 30) {
@@ -60,7 +61,7 @@ function amountFor(perf) {
       result += 300 * perf.audience;
       break;
     default:
-      throw new Error(`unknown type: ${playFor(perf).type}`);
+      throw new Error(`unknown type: ${perf.play.type}`);
   }
   return result
 }
@@ -78,7 +79,7 @@ function volumeCreditsFor(aPerformance) {
   let result = 0;
   result += Math.max(aPerformance.audience - 30, 0);
    // 每十名喜剧参与者增加额外积分分
-  if ("comedy" === playFor(aPerformance).type)
+  if ("comedy" === aPerformance.play.type)
     result += Math.floor(aPerformance.audience / 5);
   return result;
 }
