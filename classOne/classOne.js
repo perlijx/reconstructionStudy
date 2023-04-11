@@ -17,6 +17,14 @@ function renderPlanText(data, plays) {
   } 
   result += `Amount owed is ${format(totalAmount(data) / 100)}\n`;
   result += `You earned ${ totalVolumeCredits(data)} credits \n`;
+  function totalAmount(data) {
+    return data.performances
+    .reduce((total, p) => total + p.amount, 0);
+  }
+  function totalVolumeCredits(data) {
+    return data.performances
+    .reduce((total, p) => total + p.volumeCredits, 0);
+  }
   return result;
 }
 function enrichPerformance(aPerformance) {
@@ -29,22 +37,6 @@ function enrichPerformance(aPerformance) {
 }
 function playFor(aper) {
   return plays[aper.playID]
-}
-function totalAmount(invoice) {
-   let result = 0;
-  for (let perf of invoice.performances) {
-    // 打印行此订单
-    result += perf.amount;
-  } 
-  return result
-}
-function totalVolumeCredits(invoice) {
-  let result = 0;
-  for (let perf of invoice.performances) {
-    // 添加数量积分
-    result += perf.volumeCredits;
-  }
-  return result
 }
 function amountFor(perf) {
   let result = 0;
